@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Mageseries
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the https://opensource.org/licenses/AGPL-3.0 license
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Sales Orders - Hide order utility
+ * @package     Mageseries_HideOrders
+ * @author      Juan Pedro Barba Soler || Magento Developer
+ * @copyright   Copyright (c) 2016 Conbdebarba.com
+ * @license     https://opensource.org/licenses/AGPL-3.0
+**/
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Module/etc/module.xsd">
+  <module name="Mageseries_HideOrders" setup_version="1.0.0" />
+</config>

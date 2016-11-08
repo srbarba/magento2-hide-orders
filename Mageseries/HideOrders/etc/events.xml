@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Mageseries
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the https://opensource.org/licenses/AGPL-3.0 license
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Sales Orders - Hide order utility
+ * @package     Mageseries_HideOrders
+ * @author      Juan Pedro Barba Soler || Magento Developer
+ * @copyright   Copyright (c) 2016 Conbdebarba.com
+ * @license     https://opensource.org/licenses/AGPL-3.0
+**/
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="sales_order_place_after">
+        <observer name="visibility_order_create" instance="Mageseries\HideOrders\Observer\AfterOrderPlaceHideOrder" />
+    </event>
+    <event name="sales_order_collection_load_before">
+        <observer name="sales_order_collection_join_visibility_order" instance="Mageseries\HideOrders\Observer\BeforeLoadOrderCollection" />
+    </event>
+</config>
