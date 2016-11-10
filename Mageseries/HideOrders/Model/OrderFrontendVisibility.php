@@ -31,4 +31,8 @@ class OrderFrontendVisibility extends AbstractModel
         $this->_init('Mageseries\HideOrders\Model\ResourceModel\OrderFrontendVisibility');
     }
 
+    public function toggleVisibility(){
+      var_dump($this->getFrontendVisibility());
+      return $this->setFrontendVisibility((int)((int)$this->getFrontendVisibility() === 0))->save();
+    }
 }

@@ -17,14 +17,13 @@
  * @copyright   Copyright (c) 2016 Conbdebarba.com
  * @license     https://opensource.org/licenses/AGPL-3.0
 **/
-namespace Mageseries\HideOrders\Controller\Order;
+namespace Mageseries\HideOrders\Controller\Adminhtml\Order;
 
-use Magento\Framework\App\Action;
-use Magento\Customer\Model\Session;
+use Magento\Backend\App\Action;
 use Mageseries\HideOrders\Model\OrderFrontendVisibilityFactory as OrderVisibility;
 use Mageseries\HideOrders\Model\ResourceModel\OrderFrontendVisibility\CollectionFactory as CollectionOrderVisibility;
 
-class Visibility extends Action\Action
+class Visibility extends Action
 {
   /**
      * @param Action\Context $context
@@ -33,11 +32,9 @@ class Visibility extends Action\Action
      */
     public function __construct(
         Action\Context $context,
-        Session $customerSession,
         OrderVisibility $orderVisibility,
         CollectionOrderVisibility $collectionOrderVisibility
     ) {
-        $this->customerSession = $customerSession;
         $this->orderVisibility = $orderVisibility;
         $this->collectionOrderVisibility = $collectionOrderVisibility;
         parent::__construct($context);
@@ -50,29 +47,19 @@ class Visibility extends Action\Action
     public function execute()
     {
       $orderId = $this->getRequest()->getParam('order');
-      $customerId = $this->getRequest()->getParam('customer');
-      $visibility = $this->getRequest()->getParam('visibility');
       $resultRedirect = $this->resultRedirectFactory->create();
-      
-      if( $orderId && $customerId
-      ){
-        $currentCustomer = $this->customerSession->getCustomer();
-        $currentCustomerId = $currentCustomer->getId();
 
-        if( !$currentCustomerId || $currentCustomerId != $customerId ){
-        $this->messageManager->addError(__("You don't have enought permissions to perform this task."));
-        return $resultRedirect->setPath($this->_redirect->getRefererUrl());
-      }
+      if( $orderId ){
         $orderVisibility = $this->collectionOrderVisibility->create()
         ->addFieldToFilter('order_id', $orderId)
         ->getFirstItem();
 
-        if(!$orderVisibility) {
+        if($orderVisibility->getFrontendVisibility() === null) {
           $orderVisibility = $this->orderVisibility->create();
-          $orderVisibility->setOrderId();
+          $orderVisibility->setOrderId($orderId);
+          $orderVisibility->save();
         }
-        $orderVisibility->setFrontendVisibility($visibility);
-        $orderVisibility->save();
+        $orderVisibility->toggleVisibility();
 
         $this->messageManager->addSuccess(__('The order was successfully updated.'));
         return $resultRedirect->setPath($this->_redirect->getRefererUrl());
