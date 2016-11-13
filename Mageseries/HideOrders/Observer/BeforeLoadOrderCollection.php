@@ -36,11 +36,11 @@ class BeforeLoadOrderCollection implements ObserverInterface
     {
         /** @var \Magento\Sales\Model\ResourceModel\Order\Collection $collection */
         $orderCollection = $observer->getOrderCollection();
-        $orderCollection->getSelect()->join(
+        $orderCollection->getSelect()->joinLeft(
           ['v' => 'sales_order_frontend_visibility'],
           'v.order_id = main_table.entity_id',
           ['v.frontend_visibility']);
-        $orderCollection->getselect()->where('v.frontend_visibility = 1');
+        // $orderCollection->getselect()->where('v.frontend_visibility = 1');
 
         return $orderCollection;
     }

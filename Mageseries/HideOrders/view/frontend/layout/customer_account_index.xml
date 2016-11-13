@@ -8,8 +8,8 @@
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <body>
         <referenceContainer name="content">
-            <!-- <block class="Magento\Sales\Block\Order\Recent" name="customer_account_dashboard_top_2" after="customer_account_dashboard_hello" template="Mageseries_HideOrders::order/recent.phtml"/> -->
-            <referenceBlock name="customer_account_dashboard_top">              
+            <!-- <block class="Magento\Sales\Block\Order\Recent" name="customer_account_dashboard_top" after="customer_account_dashboard_hello" template="Mageseries_HideOrders::order/recent.phtml"/> -->
+            <referenceBlock name="customer_account_dashboard_top">
                 <arguments>
                     <argument name="template" xsi:type="string">Mageseries_HideOrders::order/recent.phtml</argument>
                 </arguments>

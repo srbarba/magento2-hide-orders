@@ -25,32 +25,36 @@ class ViewBeforeSetLayout
 
   public function __construct(
     \Magento\Backend\Block\Template\Context $context,
-    \Mageseries\HideOrders\Model\ResourceModel\OrderFrontendVisibility\CollectionFactory $collectionOrderVisibility
+    \Mageseries\HideOrders\Model\ResourceModel\OrderFrontendVisibility\CollectionFactory $collectionOrderVisibility,
+    \Magento\Framework\AuthorizationInterface $authorization
   ){
     $this->visibility = $collectionOrderVisibility;
     $this->urlBuilder = $context->getUrlBuilder();
+    $this->_authorization = $authorization;
   }
 
   public function beforeSetLayout(
     \Magento\Sales\Block\Adminhtml\Order\View $view
   ){
-    $orderId = $view->getOrderId();
-    $orderVisibility = $this->visibility->create()->addFieldToFilter('order_id', $orderId)->getFirstItem();
-    $visibility = $orderVisibility->getFrontendVisibility();
-    $action = __('Hide Order');
-    if(  $visibility === '0' )
-    $action = __('Show Order');
+    if($this->_authorization->isAllowed('Mageseries_HideOrders::hideo_order')){
+      $orderId = $view->getOrderId();
+      $orderVisibility = $this->visibility->create()->addFieldToFilter('order_id', $orderId)->getFirstItem();
+      $visibility = $orderVisibility->getFrontendVisibility();
+      $action = __('Hide Order');
+      if(  $visibility === '0' )
+      $action = __('Show Order');
 
-    $message = __('Are you sure you want to %1?', strtolower($action));
-    $url = $this->urlBuilder->getUrl('sales/order/visibility/order/'. $orderId );
+      $message = __('Are you sure you want to %1?', strtolower($action));
+      $url = $this->urlBuilder->getUrl('sales/order/visibility/order/'. $orderId );
 
-    $view->addButton(
-        'order_myaction',
-        [
-            'label' => $action,
-            'class' => 'myclass',
-            'onclick' => "confirmSetLocation('{$message}', '{$url}')"
-        ]
-    );
+      $view->addButton(
+          'order_myaction',
+          [
+              'label' => $action,
+              'class' => 'myclass',
+              'onclick' => "confirmSetLocation('{$message}', '{$url}')"
+          ]
+      );
+    }
   }
 }

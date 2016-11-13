@@ -35,6 +35,7 @@
                 </thead>
                 <tbody>
                     <?php foreach ($_orders as $_order): ?>
+                      <?php if( $_order->getFrontendVisibility() !== '0' ): ?>
                         <tr>
                             <td data-th="<?php echo $block->escapeHtml(__('Order #')) ?>" class="col id"><?php /* @escapeNotVerified */ echo $_order->getRealOrderId() ?></td>
                             <td data-th="<?php echo $block->escapeHtml(__('Date')) ?>" class="col date"><?php /* @escapeNotVerified */ echo $block->formatDate($_order->getCreatedAt()) ?></td>
@@ -53,11 +54,14 @@
                                       <span><?php /* @escapeNotVerified */ echo __('Reorder') ?></span>
                                   </a>
                               <?php endif ?>
-                              <a href="#" class="action view remove-order" data-action='<?php /* @escapeNotVerified */ echo $block->getUrl('sales/order/visibility').'order/'.$_order->getId().'/customer/'.$_order->getCustomerId().'/visibility/0'; ?>'>
-                                  <span><?php /* @escapeNotVerified */ echo __('Remove Order') ?></span>
-                              </a>
+                              <?php if (!$_order->canInvoice()) : ?>
+                                <a href="#" class="action view remove-order" data-action='<?php /* @escapeNotVerified */ echo $block->getUrl('sales/order/visibility').'order/'.$_order->getId().'/customer/'.$_order->getCustomerId().'/visibility/0'; ?>'>
+                                    <span><?php /* @escapeNotVerified */ echo __('Remove Order') ?></span>
+                                </a>
+                              <?php endif; ?>
                             </td>
                         </tr>
+                      <?php endif; ?>
                     <?php endforeach; ?>
                 </tbody>
             </table>
@@ -67,41 +71,11 @@
     <?php endif; ?>
     </div>
 </div>
-<script>
-    require(
-        [
-            'jquery',
-            'Magento_Ui/js/modal/modal'
-        ],
-        function( $, modal ) {
-            var options = {
-                type: 'popup',
-                responsive: true,
-                innerScroll: true,
-                class:"confirm",
-                footer: "prueba",
-                buttons: [{
-                    text: $.mage.__('Cancel'),
-                    class: 'action-secondary action-dismiss',
-                    click: function () {
-                        this.closeModal();
-                    }
-                  },
-                  {
-                    text: $.mage.__('Continue'),
-                    class: 'action-primary action-accept',
-                    click: function () {
-                        var action = this.focussedElement.getAttribute("data-action");
-                        window.location.href = action;
-                        this.closeModal();
-                    }
-                  }]
-            };
-            var popup = modal(options, '<div id="popup-modal"><?php echo _('¿Are you sure you want to remove this order from history?'); ?></div>');
-            $('.remove-order').click(function(e){
-              e.preventDefault();
-              $('#popup-modal').modal('openModal');
-            });
-        }
-    );
+
+<script type="text/x-magento-init">
+{
+  "*": {
+      "Mageseries_HideOrders/js/hide-order-modal": {}
+  }
+}
 </script>
